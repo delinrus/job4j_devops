@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model class representing two numeric arguments for calculation operations.
+ * Used as input for mathematical operations like addition and multiplication.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
