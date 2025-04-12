@@ -1,0 +1,17 @@
+[versions]
+springBoot = "3.4.0"
+springDependencyManagement = "1.1.6"
+spotbugs = "6.0.26"
+lombok = "1.18.36"
+junitJupiter = "5.10.0"
+assertj = "3.24.2"
+
+[libraries]
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs" }
