@@ -65,8 +65,8 @@ class CalcControllerTest {
 
     @Test
     public void whenNegativeNumber2() {
-        var input = new TwoArgs(-5, -5);
-        var expected = new Result(-10);
+        var input = new TwoArgs(-6, -6);
+        var expected = new Result(-12);
         var output = new CalcController().summarise(input);
         assertThat(output.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
         assertThat(output.getBody()).isEqualTo(expected);
