@@ -2,7 +2,9 @@ FROM gradle:8.11.1-jdk21 as builder
 RUN mkdir job4j_devops
 WORKDIR /job4j_devops
 
+# Copy necessary build files and the gradle directory containing libs.versions.toml
 COPY build.gradle.kts settings.gradle.kts gradle.properties ./
+COPY gradle gradle
 RUN gradle --no-daemon dependencies
 
 COPY . .
