@@ -9,9 +9,15 @@ import lombok.NoArgsConstructor;
  * Used as input for mathematical operations like addition and multiplication.
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class TwoArgs {
     private double first;
     private double second;
+
+    /**
+     * Default constructor for TwoArgs
+     */
+    public TwoArgs() {
+
+    }
 }

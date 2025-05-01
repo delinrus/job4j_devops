@@ -9,8 +9,13 @@ import lombok.NoArgsConstructor;
  * Contains a single numeric value that represents the result.
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class Result {
     private double value;
+
+    /**
+     * Default constructor for Result.
+     */
+    public Result() {
+    }
 }
