@@ -11,4 +11,7 @@
     <include file="changeset/002_ddl_add_columns_to_users.sql"
              author="Maksim Levin"
              relativeToChangelogFile="true"/>
+    <include file="changeset/003_ddl_alter_add_user_create_date.sql"
+             author="Maksim Levin"
+             relativeToChangelogFile="true"/>
 </databaseChangeLog>
