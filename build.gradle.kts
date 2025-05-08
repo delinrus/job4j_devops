@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.spotbugs)
     id("org.liquibase.gradle") version "3.0.1"
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
 }
 
 group = "ru.job4j.devops"
@@ -25,9 +26,9 @@ liquibase {
     activities.register("main") {
         this.arguments = mapOf(
             "logLevel"       to "info",
-            "url"            to "jdbc:postgresql://localhost:5432/job4j_devops",
-            "username"       to "postgres",
-            "password"       to "password",
+            "url"            to env.DB_URL.value,
+            "username"       to env.DB_USERNAME.value,
+            "password"       to env.DB_PASSWORD.value,
             "classpath"      to "src/main/resources",
             "changelogFile"  to "db/changelog/db.changelog-master.xml"
         )
@@ -77,7 +78,6 @@ dependencies {
     liquibaseRuntime("ch.qos.logback:logback-classic:1.5.15")
     liquibaseRuntime("info.picocli:picocli:4.6.1")
     implementation("org.postgresql:postgresql:42.7.4")
-    testImplementation("com.h2database:h2:2.2.224")
 }
 
 tasks.withType<Test> {
@@ -104,6 +104,17 @@ tasks.spotbugsMain {
 
 tasks.test {
     finalizedBy(tasks.spotbugsMain)
+}
+
+tasks.named<Test>("test") {
+    systemProperty("spring.datasource.url", env.DB_URL.value)
+    systemProperty("spring.datasource.username", env.DB_USERNAME.value)
+    systemProperty("spring.datasource.password", env.DB_PASSWORD.value)
+    
+    doFirst {
+        println("Database URL: ${env.DB_URL.value}")
+        println("Database Username: ${env.DB_USERNAME.value}")
+    }
 }
 
 tasks.register("checkJarSize") {
@@ -145,3 +156,10 @@ tasks.register<Zip>("archiveResources") {
         println("Resources archived successfully at ${outputDir.get().asFile.absolutePath}")
     }
 }
+
+tasks.register("profile") {
+    doFirst {
+        println(env.DB_URL.value)
+    }
+}
+
