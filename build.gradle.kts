@@ -13,6 +13,45 @@ plugins {
 group = "ru.job4j.devops"
 version = "1.0.0"
 
+// Integration test source set configuration
+val integrationTest by sourceSets.creating {
+    java {
+        srcDir("src/integrationTest/java")
+    }
+    resources {
+        srcDir("src/integrationTest/resources")
+    }
+
+    // Let the integrationTest classpath include the main and test outputs
+    compileClasspath += sourceSets["main"].output + sourceSets["test"].output
+    runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+}
+
+// Integration test dependencies
+val integrationTestImplementation by configurations.getting {
+    extendsFrom(configurations["testImplementation"])
+}
+val integrationTestRuntimeOnly by configurations.getting {
+    extendsFrom(configurations["testRuntimeOnly"])
+}
+
+// Integration test task
+tasks.register<Test>("integrationTest") {
+    description = "Runs the integration tests."
+    group = "verification"
+
+    testClassesDirs = integrationTest.output.classesDirs
+    classpath = integrationTest.runtimeClasspath
+
+    // Usually run after regular unit tests
+    shouldRunAfter(tasks.test)
+}
+
+// Add integration test to check task
+tasks.check {
+    dependsOn("integrationTest")
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -78,6 +117,7 @@ dependencies {
     liquibaseRuntime("ch.qos.logback:logback-classic:1.5.15")
     liquibaseRuntime("info.picocli:picocli:4.6.1")
     implementation("org.postgresql:postgresql:42.7.4")
+    testImplementation("org.testcontainers:postgresql:1.20.4")
 }
 
 tasks.withType<Test> {
