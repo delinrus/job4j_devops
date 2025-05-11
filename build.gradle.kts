@@ -118,6 +118,7 @@ dependencies {
     liquibaseRuntime("info.picocli:picocli:4.6.1")
     implementation("org.postgresql:postgresql:42.7.4")
     testImplementation("org.testcontainers:postgresql:1.20.4")
+    integrationTestImplementation("org.liquibase:liquibase-core:4.30.0")
 }
 
 tasks.withType<Test> {
