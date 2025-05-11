@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class UserRepositoryTest {
-    private static PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(
+    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:16-alpine"
     ).withReuse(true);
 
@@ -23,19 +23,19 @@ class UserRepositoryTest {
 
     @DynamicPropertySource
     public static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRES::getUsername);
-        registry.add("spring.datasource.password", POSTGRES::getPassword);
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
     }
 
     @BeforeAll
     static void beforeAll() {
-        POSTGRES.start();
+        postgres.start();
     }
 
     @AfterAll
     static void afterAll() {
-        POSTGRES.stop();
+        postgres.stop();
     }
 
     @Test
