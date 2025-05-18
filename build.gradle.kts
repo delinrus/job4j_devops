@@ -122,6 +122,9 @@ dependencies {
     integrationTestImplementation("org.liquibase:liquibase-core:4.30.0")
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.3")
     annotationProcessor("com.github.spotbugs:spotbugs-annotations:4.9.3")
+    implementation("org.springframework.kafka:spring-kafka")
+    testImplementation("org.awaitility:awaitility")
+    testImplementation("org.testcontainers:kafka:1.20.4")
 }
 
 tasks.withType<Test> {
