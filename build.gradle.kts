@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.spotbugs)
     id("org.liquibase.gradle") version "3.0.1"
     id("co.uzzu.dotenv.gradle") version "4.0.0"
+    id("maven-publish")
 }
 
 group = "ru.job4j.devops"
@@ -25,6 +26,24 @@ val integrationTest by sourceSets.creating {
     // Let the integrationTest classpath include the main and test outputs
     compileClasspath += sourceSets["main"].output + sourceSets["test"].output
     runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            url = uri("http://192.168.0.56:8081/repository/maven-releases/")
+            isAllowInsecureProtocol = true
+            credentials {
+                username = "devops"
+                password = "password"
+            }
+        }
+    }
 }
 
 // Integration test dependencies
@@ -55,6 +74,10 @@ tasks.check {
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url = uri("http://192.168.0.56:8081//repository/maven-public/")
+            isAllowInsecureProtocol = true
+        }
     }
     dependencies {
         classpath("org.liquibase:liquibase-core:4.30.0")
