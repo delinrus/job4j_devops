@@ -16,7 +16,7 @@ public class CalcEventListener {
 
     @KafkaListener(topics = "calc_events", groupId = "job4j")
     public void handleCalcEvent(CalcEvent event) {
-        log.debug("Received calculation event: {} {} {} = {}", 
+        log.debug("Received the calculation event: {} {} {} = {}",
             event.getFirst(), event.getType(), event.getSecond(), event.getResult());
         calcEventRepository.save(event);
     }

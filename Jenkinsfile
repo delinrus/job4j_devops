@@ -31,11 +31,45 @@ pipeline {
                 sh './gradlew jacocoTestCoverageVerification -P"dotenv.filename"="/var/agent-jdk21/env/.env.develop"'
             }
         }
-        stage('Docker Build') {
+
+        stage('Check Git Tag') {
             steps {
-                sh 'docker build -t job4j_devops .'
+                script {
+                    env.GIT_TAG = sh(script: 'git describe --tags --exact-match || echo ""', returnStdout: true).trim()
+                    if (env.GIT_TAG) {
+                        echo "Git tag detected: ${env.GIT_TAG}"
+                    } else {
+                        echo "No Git tag found. Proceeding without tagging/publishing Docker image."
+                    }
+                }
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t job4j_devops:latest .'
+            }
+        }
+
+        stage('Tag and Push to Nexus') {
+            when {
+                expression { return env.GIT_TAG }
+            }
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'nexus-credentials-id',
+                    usernameVariable: 'NEXUS_USER',
+                    passwordVariable: 'NEXUS_PASS'
+                )]) {
+                    sh """
+                        echo "${NEXUS_PASS}" | docker login 192.168.0.56:8082 -u "${NEXUS_USER}" --password-stdin
+                        docker tag job4j_devops:latest 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
+                        docker push 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
+                    """
+                }
+            }
+        }
+
         stage('Update DB') {
             steps {
                 script {
