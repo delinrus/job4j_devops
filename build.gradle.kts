@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "ru.job4j.devops"
-version = "1.0.6"
+version = "1.0.7"
 
 // Integration test source set configuration
 val integrationTest by sourceSets.creating {
