@@ -51,22 +51,33 @@ pipeline {
             }
         }
 
-        stage('Tag and Push to Nexus') {
+        stage('Publish Maven Artifact') {
             when {
                 expression { return env.GIT_TAG }
             }
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'nexus-credentials-id',
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
+                        credentialsId: 'nexus-credentials-id',
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
                 )]) {
-                    sh """
-                        echo "${NEXUS_PASS}" | docker login 192.168.0.56:8082 -u "${NEXUS_USER}" --password-stdin
-                        docker tag job4j_devops:latest 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
-                        docker push 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
-                    """
+                    sh '''
+                        ./gradlew publish                       \
+                                 -PnexusUsername="$NEXUS_USER"  \
+                                 -PnexusPassword="$NEXUS_PASS"  \
+                                 -P"dotenv.filename"="/var/agent-jdk21/env/.env.develop"
+                    '''
                 }
+            }
+        }
+
+        stage('Tag and Push to Nexus') {
+            when { expression { env.GIT_TAG } }
+            steps {
+                sh """
+                    docker tag job4j_devops:latest 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
+                    docker push 192.168.0.56:8082/repository/my-docker-repo/job4j_devops:${GIT_TAG}
+                """
             }
         }
 

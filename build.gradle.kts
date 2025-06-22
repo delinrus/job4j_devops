@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "ru.job4j.devops"
-version = "1.0.0"
+version = "1.0.6"
 
 // Integration test source set configuration
 val integrationTest by sourceSets.creating {
@@ -28,6 +28,13 @@ val integrationTest by sourceSets.creating {
     runtimeClasspath += sourceSets["main"].output + sourceSets["test"].output
 }
 
+// Получаем учётку из system property или переменной окружения, дефолтов не жёстко задаём
+val nexusUsername: String? = (project.findProperty("nexusUsername") as String?)
+    ?: System.getenv("NEXUS_USER")
+
+val nexusPassword: String? = (project.findProperty("nexusPassword") as String?)
+    ?: System.getenv("NEXUS_PASS")
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
@@ -36,11 +43,12 @@ publishing {
     }
     repositories {
         maven {
+            // если нужны снапшоты / релизы — можно переключать url по `version`
             url = uri("http://192.168.0.56:8081/repository/maven-releases/")
             isAllowInsecureProtocol = true
             credentials {
-                username = "devops"
-                password = "password"
+                username = nexusUsername
+                password = nexusPassword
             }
         }
     }
