@@ -149,6 +149,8 @@ dependencies {
     liquibaseRuntime("ch.qos.logback:logback-classic:1.5.15")
     liquibaseRuntime("info.picocli:picocli:4.6.1")
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
     testImplementation("org.testcontainers:postgresql:1.20.4")
     integrationTestImplementation("org.liquibase:liquibase-core:4.30.0")
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.3")
