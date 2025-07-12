@@ -3,8 +3,10 @@ package ru.job4j.devops.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.devops.models.CalcRequest;
 import ru.job4j.devops.models.Result;
 import ru.job4j.devops.models.TwoArgs;
+import ru.job4j.devops.service.CalculatorService;
 import ru.job4j.devops.service.ResultService;
 
 import java.time.LocalDate;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CalcController {
 
     private final ResultService resultService;
+    private final CalculatorService calculatorService;
 
     /**
      * Endpoint for performing addition of two numbers.
@@ -33,6 +36,23 @@ public class CalcController {
         result.setSecondArg(twoArgs.getSecond());
         result.setResult(twoArgs.getFirst() + twoArgs.getSecond());
         result.setOperation("+");
+        result.setCreateDate(LocalDate.now());
+        resultService.save(result);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Endpoint for performing calculations using CalculatorService.
+     * @param calcRequest object containing two numeric arguments and operation
+     * @return ResponseEntity with the Result of the calculation
+     */
+    @PostMapping("calculate")
+    public ResponseEntity<Result> calculate(@RequestBody CalcRequest calcRequest) {
+        var result = new Result();
+        result.setFirstArg(calcRequest.getFirst());
+        result.setSecondArg(calcRequest.getSecond());
+        result.setResult(calculatorService.add(calcRequest.getFirst(), calcRequest.getSecond(), calcRequest.getOperation()));
+        result.setOperation(calcRequest.getOperation().name());
         result.setCreateDate(LocalDate.now());
         resultService.save(result);
         return ResponseEntity.ok(result);
