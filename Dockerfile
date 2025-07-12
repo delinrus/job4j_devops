@@ -1,5 +1,5 @@
 # Accept version as build argument
-ARG VERSION=1.0.7
+ARG VERSION=1.0.8
 FROM openjdk:21-jdk as builder
 ARG VERSION
 

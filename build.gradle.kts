@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "ru.job4j.devops"
-version = "1.0.7"
+version = "1.0.8"
 
 // Integration test source set configuration
 val integrationTest by sourceSets.creating {
@@ -151,6 +151,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.4")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("com.github.loki4j:loki-logback-appender:1.6.0")
     testImplementation("org.testcontainers:postgresql:1.20.4")
     integrationTestImplementation("org.liquibase:liquibase-core:4.30.0")
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.3")
