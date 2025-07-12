@@ -1,6 +1,8 @@
 package ru.job4j.devops.controllers;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.devops.models.CalcRequest;
@@ -18,10 +20,15 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("calc")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CalcController {
 
     private final ResultService resultService;
+
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP2",
+            justification = "CalculatorService is a Spring-managed bean and immutable in practice"
+    )
     private final CalculatorService calculatorService;
 
     /**
