@@ -1,5 +1,6 @@
 package ru.job4j.devops;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * This class initializes and starts the Spring Boot application.
  */
 @SpringBootApplication
+@Slf4j
 public class CalcApplication {
 
 	/**
@@ -23,5 +25,18 @@ public class CalcApplication {
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(CalcApplication.class, args);
+		new Thread(
+				() -> {
+					while (true) {
+						log.error("Check");
+						log.error("NPE");
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				}
+		).start();
 	}
 }
